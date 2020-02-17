@@ -65,6 +65,7 @@ class TbsAnalyser {
                 callMethodMap[method.buildFullMethodName(node)] = method
             }
         }
+
         return callMethodMap
     }
 }

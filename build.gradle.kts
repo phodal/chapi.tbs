@@ -1,16 +1,20 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    val kotlinVersion = "1.3.61"
-    kotlin("jvm") version kotlinVersion apply false
+    base
 
     java
+    kotlin("jvm") version "1.3.61"
 }
 
-repositories {
-    jcenter()
-    mavenCentral()
-    maven(url = "https://dl.bintray.com/phodal/chapi")
+allprojects {
+    group = "com.phodal.tbs"
+    version = "0.0.3"
+    description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+    }
 }
 
 dependencies {
@@ -30,6 +34,10 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-console:1.6.0")
 }
 
+repositories {
+    mavenCentral()
+}
+
 tasks.test {
     useJUnitPlatform()
     testLogging {
@@ -37,7 +45,11 @@ tasks.test {
     }
 }
 
-// config JVM target to 1.8 for kotlin compilation tasks
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "1.8"
-}
+//val compileKotlin: KotlinCompile by tasks
+//compileKotlin.kotlinOptions {
+//    jvmTarget = "1.8"
+//}
+//val compileTestKotlin: KotlinCompile by tasks
+//compileTestKotlin.kotlinOptions {
+//    jvmTarget = "1.8"
+//}
