@@ -6,11 +6,7 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 
 repositories {
-//    jcenter()
-//    maven { url 'https://jitpack.io' }
-    maven {
-        url  "https://dl.bintray.com/phodal/chapi"
-    }
+    jcenter()
     mavenCentral()
 }
 
