@@ -44,7 +44,9 @@ class TbsAnalyser {
         results: TbsResults,
         method: CodeFunction
     ) {
-        if (filePath.endsWith(".java") && annotation.isTest()) {
+        val isJavaTest = filePath.endsWith(".java") && annotation.isTest()
+        val isGoTest = filePath.endsWith("_test.go")
+        if (isJavaTest || isGoTest) {
             if (method.FunctionCalls.size <= 1) {
                 val badSmell = TestBadSmell(
                     FileName = filePath,

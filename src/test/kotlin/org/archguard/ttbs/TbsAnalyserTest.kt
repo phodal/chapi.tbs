@@ -7,7 +7,7 @@ import java.nio.file.Paths
 
 internal class TbsAnalyserTest {
     @Test
-    internal fun shouldIdentifyEmptyTest() {
+    internal fun shouldIdentifyJavaEmptyTest() {
         val files = getTestResourceFileByPath("tbs/usecases/EmptyTest.java")
         val results = TbsAnalyser().analysisByFiles(files)
 
@@ -16,6 +16,16 @@ internal class TbsAnalyserTest {
         assertEquals(results[0].Type, "EmptyTest")
     }
 
+//    @Test
+//    internal fun shouldIdentifyGolangEmptyTest() {
+//        val files = getTestResourceFileByPath("tbs/go/empty_test.go")
+//        val results = TbsAnalyser().analysisByFiles(files)
+//
+//        assertEquals(results[0].FileName, "empty_test.go")
+//        assertEquals(results[0].Line, 8)
+//        assertEquals(results[0].Type, "EmptyTest")
+//    }
+//
     private fun getTestResourceFileByPath(path: String): Array<AbstractFile> {
         val resource = this.javaClass.classLoader.getResource(path)
         val file = Paths.get(resource!!.toURI()).toFile()
