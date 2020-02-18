@@ -6,8 +6,8 @@ plugins {
 }
 
 allprojects {
-    group = "com.phodal.tbs"
-    version = "0.0.4"
+    group = "org.archguard.tbs"
+    version = "0.0.5"
 
     repositories {
         mavenCentral()
@@ -17,9 +17,9 @@ allprojects {
 }
 
 dependencies {
-    implementation("com.phodal:chapi-domain:0.0.4")
-    implementation("com.phodal:chapi-application:0.0.4")
-    implementation("com.phodal:chapi-ast-java:0.0.4")
+    implementation("com.phodal:chapi-domain:0.0.5")
+    implementation("com.phodal:chapi-application:0.0.5")
+    implementation("com.phodal:chapi-ast-java:0.0.5")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
