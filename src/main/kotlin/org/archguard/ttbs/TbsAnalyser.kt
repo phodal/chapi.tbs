@@ -39,11 +39,25 @@ class TbsAnalyser(
                 val hasAssert = false
                 for (funcCall in method.FunctionCalls) {
                     checkRedundantPrintTest(node.FilePath, funcCall, tbsResult)
+                    checkSleepyTest(node.FilePath, method, funcCall, tbsResult)
                 }
             }
         }
 
         return tbsResult.results
+    }
+
+    private fun checkSleepyTest(filePath: String, method: CodeFunction, funcCall: CodeCall, tbsResult: TbsResult) {
+        if (funcCall.isThreadSleep()) {
+            val testBadSmell = TestBadSmell(
+                FileName = filePath,
+                Type = "SleepyTest",
+                Description = "",
+                Line = funcCall.Position.StartLine
+            )
+
+            tbsResult.results += testBadSmell
+        }
     }
 
     private fun checkRedundantPrintTest(filePath: String, funcCall: CodeCall, tbsResult: TbsResult) {
