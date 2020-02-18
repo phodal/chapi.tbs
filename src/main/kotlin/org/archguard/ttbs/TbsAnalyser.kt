@@ -30,6 +30,10 @@ class TbsAnalyser(
                     continue
                 }
 
+                var currentMethodCalls = addExtractAssertMethodCall(method, node, callMethodMap)
+                method.FunctionCalls = currentMethodCalls
+                println(method.FunctionCalls.size)
+
                 for (annotation in method.Annotations) {
                     checkIgnoreTest(node.FilePath, annotation, tbsResult, method)
                     checkEmptyTest(node.FilePath, annotation, tbsResult, method)
@@ -37,9 +41,10 @@ class TbsAnalyser(
 
                 var methodCallMap = hashMapOf<String, Array<CodeCall>>()
                 var hasAssert = false
-                for ((index, funcCall) in method.FunctionCalls.withIndex()) {
+
+                for ((index, funcCall) in currentMethodCalls.withIndex()) {
                     if (funcCall.FunctionName == "") {
-                        val lastFuncCall = index == method.FunctionCalls.size - 1
+                        val lastFuncCall = index == currentMethodCalls.size - 1
                         if (lastFuncCall && !hasAssert) {
                             appendUnknownTest(node.FilePath, method, tbsResult)
                         }
@@ -54,7 +59,7 @@ class TbsAnalyser(
 
                     if (funcCall.hasAssertion()) hasAssert = true
 
-                    val lastFuncCall = index == method.FunctionCalls.size - 1
+                    val lastFuncCall = index == currentMethodCalls.size - 1
                     if (lastFuncCall && !hasAssert) {
                         appendUnknownTest(node.FilePath, method, tbsResult)
                     }
@@ -65,6 +70,24 @@ class TbsAnalyser(
         }
 
         return tbsResult.results
+    }
+
+    private fun addExtractAssertMethodCall(
+        method: CodeFunction,
+        node: CodeDataStruct,
+        callMethodMap: MutableMap<String, CodeFunction>
+    ): Array<CodeCall> {
+        var methodCalls = method.FunctionCalls
+        for (methodCall in methodCalls) {
+            if (methodCall.NodeName == node.NodeName) {
+                val method = callMethodMap[methodCall.buildFullMethodName()]
+                if (method != null && method.Name != "") {
+                    methodCalls += method.FunctionCalls
+                }
+            }
+        }
+
+        return methodCalls
     }
 
     private fun updateMethodCallMap(

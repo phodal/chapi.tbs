@@ -75,4 +75,20 @@ internal class TbsAnalyserTest {
         assertEquals(results[0].Line, 9)
         assertEquals(results[0].Type, "DuplicateAssertTest")
     }
+
+    @Test
+    internal fun shouldReturnEmptyWhenIsCreator() {
+        val path = getAbsolutePath("regression/CreatorNotUnknownTest.java")
+        val results = TbsAnalyser().analysisByPath(path)
+
+        assertEquals(results.size, 0)
+    }
+
+//    @Test
+//    internal fun shouldReturnEmptyWhenCallAssertInClassTests() {
+//        val path = getAbsolutePath("regression/CallAssertInClassTests.java")
+//        val results = TbsAnalyser().analysisByPath(path)
+//
+//        assertEquals(results.size, 0)
+//    }
 }
