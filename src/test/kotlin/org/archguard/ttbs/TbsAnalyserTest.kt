@@ -55,4 +55,15 @@ internal class TbsAnalyserTest {
         assertEquals(results[0].Line, 14)
         assertEquals(results[0].Type, "RedundantAssertionTest")
     }
+
+    @Test
+    internal fun shouldIdentifyUnknownTest() {
+        val path = getAbsolutePath("tbs/usecases/UnknownTest.java")
+        val results = TbsAnalyser().analysisByPath(path)
+
+        assertEquals(results[0].Line, 7)
+        assertEquals(results[0].Type, "EmptyTest")
+        assertEquals(results[1].Line, 7)
+        assertEquals(results[1].Type, "UnknownTest")
+    }
 }

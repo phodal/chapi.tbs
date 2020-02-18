@@ -36,16 +36,42 @@ class TbsAnalyser(
                 }
 
                 val methodCallMap = mutableMapOf<String, Array<CodeCall>>()
-                val hasAssert = false
-                for (funcCall in method.FunctionCalls) {
+                var hasAssert = false
+                for ((index, funcCall) in method.FunctionCalls.withIndex()) {
+                    if (funcCall.FunctionName == "") {
+                        val lastFuncCall = index == method.FunctionCalls.size - 1
+                        if (lastFuncCall && !hasAssert) {
+                            appendUnknownTest(node.FilePath, method, tbsResult)
+                        }
+                        continue
+                    }
+
                     checkRedundantPrintTest(node.FilePath, funcCall, tbsResult)
                     checkSleepyTest(node.FilePath, method, funcCall, tbsResult)
                     checkRedundantAssertionTest(node.FilePath, method, funcCall, tbsResult)
+
+                    if (funcCall.hasAssertion()) hasAssert = true
+
+                    val lastFuncCall = index == method.FunctionCalls.size - 1
+                    if (lastFuncCall && !hasAssert) {
+                        appendUnknownTest(node.FilePath, method, tbsResult)
+                    }
                 }
             }
         }
 
         return tbsResult.results
+    }
+
+    private fun appendUnknownTest(filePath: String, method: CodeFunction, tbsResult: TbsResult) {
+        val testBadSmell = TestBadSmell(
+            FileName = filePath,
+            Type = "UnknownTest",
+            Description = "",
+            Line = method.Position.StartLine
+        )
+
+        tbsResult.results += testBadSmell
     }
 
     private fun checkRedundantAssertionTest(
