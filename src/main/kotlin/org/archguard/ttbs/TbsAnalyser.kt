@@ -2,7 +2,6 @@ package org.archguard.ttbs
 
 import chapi.app.analyser.ChapiAnalyser
 import chapi.app.analyser.config.ChapiConfig
-import chapi.app.analyser.support.AbstractFile
 import chapi.domain.core.CodeAnnotation
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeFunction

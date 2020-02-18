@@ -1,10 +1,7 @@
 package org.archguard.ttbs
 
-import chapi.app.analyser.config.ChapiConfig
-import chapi.app.analyser.support.AbstractFile
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.io.File
 import java.nio.file.Paths
 
 internal class TbsAnalyserTest {
