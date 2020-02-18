@@ -80,9 +80,9 @@ class TbsAnalyser(
         var methodCalls = method.FunctionCalls
         for (methodCall in methodCalls) {
             if (methodCall.NodeName == node.NodeName) {
-                val method = callMethodMap[methodCall.buildFullMethodName()]
-                if (method != null && method.Name != "") {
-                    methodCalls += method.FunctionCalls
+                val mapFunc = callMethodMap[methodCall.buildFullMethodName()]
+                if (mapFunc != null && mapFunc.Name != "") {
+                    methodCalls += mapFunc.FunctionCalls
                 }
             }
         }
