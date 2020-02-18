@@ -46,14 +46,7 @@ class TbsAnalyser(
                         continue
                     }
 
-
-                    var calls: Array<CodeCall> = arrayOf()
-                    val buildFullMethodName = funcCall.buildFullMethodName()
-                    if (methodCallMap[buildFullMethodName] != null) {
-                        calls = methodCallMap[buildFullMethodName]!!
-                    }
-                    calls += funcCall
-                    methodCallMap[buildFullMethodName] = calls
+                    updateMethodCallMap(funcCall, methodCallMap)
 
                     checkRedundantPrintTest(node.FilePath, funcCall, tbsResult)
                     checkSleepyTest(node.FilePath, method, funcCall, tbsResult)
@@ -72,6 +65,19 @@ class TbsAnalyser(
         }
 
         return tbsResult.results
+    }
+
+    private fun updateMethodCallMap(
+        funcCall: CodeCall,
+        methodCallMap: HashMap<String, Array<CodeCall>>
+    ) {
+        var calls: Array<CodeCall> = arrayOf()
+        val buildFullMethodName = funcCall.buildFullMethodName()
+        if (methodCallMap[buildFullMethodName] != null) {
+            calls = methodCallMap[buildFullMethodName]!!
+        }
+        calls += funcCall
+        methodCallMap[buildFullMethodName] = calls
     }
 
     private fun checkDuplicateAssertTest(
