@@ -35,7 +35,7 @@ class TbsAnalyser(
                     checkEmptyTest(node.FilePath, annotation, tbsResult, method)
                 }
 
-                val methodCallMap = mutableMapOf<String, Array<CodeCall>>()
+                var methodCallMap = hashMapOf<String, Array<CodeCall>>()
                 var hasAssert = false
                 for ((index, funcCall) in method.FunctionCalls.withIndex()) {
                     if (funcCall.FunctionName == "") {
@@ -45,6 +45,15 @@ class TbsAnalyser(
                         }
                         continue
                     }
+
+
+                    var calls: Array<CodeCall> = arrayOf()
+                    val buildFullMethodName = funcCall.buildFullMethodName()
+                    if (methodCallMap[buildFullMethodName] != null) {
+                        calls = methodCallMap[buildFullMethodName]!!
+                    }
+                    calls += funcCall
+                    methodCallMap[buildFullMethodName] = calls
 
                     checkRedundantPrintTest(node.FilePath, funcCall, tbsResult)
                     checkSleepyTest(node.FilePath, method, funcCall, tbsResult)
@@ -57,10 +66,41 @@ class TbsAnalyser(
                         appendUnknownTest(node.FilePath, method, tbsResult)
                     }
                 }
+
+                checkDuplicateAssertTest(node, method, methodCallMap, tbsResult)
             }
         }
 
         return tbsResult.results
+    }
+
+    private fun checkDuplicateAssertTest(
+        node: CodeDataStruct,
+        method: CodeFunction,
+        methodCallMap: MutableMap<String, Array<CodeCall>>,
+        tbsResult: TbsResult
+    ) {
+        var isDuplicateTest = false
+        for (entry in methodCallMap) {
+            val methodCalls = entry.value
+            val duplicatedLimitLength = 5
+            if (methodCalls.size >= duplicatedLimitLength) {
+                if (methodCalls.last().hasAssertion()) {
+                    isDuplicateTest = true
+                }
+            }
+        }
+
+        if (isDuplicateTest) {
+            val testBadSmell = TestBadSmell(
+                FileName = node.FilePath,
+                Type = "DuplicateAssertTest",
+                Description = "",
+                Line = method.Position.StartLine
+            )
+
+            tbsResult.results += testBadSmell
+        }
     }
 
     private fun appendUnknownTest(filePath: String, method: CodeFunction, tbsResult: TbsResult) {

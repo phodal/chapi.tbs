@@ -66,4 +66,13 @@ internal class TbsAnalyserTest {
         assertEquals(results[1].Line, 7)
         assertEquals(results[1].Type, "UnknownTest")
     }
+
+    @Test
+    internal fun shouldIdentifyDuplicateAssertTest() {
+        val path = getAbsolutePath("tbs/usecases/DuplicateAssertTest.java")
+        val results = TbsAnalyser().analysisByPath(path)
+
+        assertEquals(results[0].Line, 9)
+        assertEquals(results[0].Type, "DuplicateAssertTest")
+    }
 }
