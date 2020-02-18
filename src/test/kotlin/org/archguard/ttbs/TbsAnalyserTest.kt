@@ -84,11 +84,27 @@ internal class TbsAnalyserTest {
         assertEquals(results.size, 0)
     }
 
-//    @Test
-//    internal fun shouldReturnEmptyWhenCallAssertInClassTests() {
-//        val path = getAbsolutePath("regression/CallAssertInClassTests.java")
-//        val results = TbsAnalyser().analysisByPath(path)
-//
-//        assertEquals(results.size, 0)
-//    }
+    @Test
+    internal fun shouldReturnEmptyWhenCallAssertInClassTests() {
+        val path = getAbsolutePath("regression/CallAssertInClassTests.java")
+        val results = TbsAnalyser().analysisByPath(path)
+
+        assertEquals(results.size, 0)
+    }
+
+    @Test
+    internal fun shouldReturnEmptyWhenCall() {
+        val path = getAbsolutePath("regression/EnvironmentSystemIntegrationTests.java")
+        val results = TbsAnalyser().analysisByPath(path)
+
+        assertEquals(results.size, 0)
+    }
+
+    @Test
+    internal fun shouldReturnMultipleResults() {
+        val path = getAbsolutePath("regression/I18NTest.java")
+        val results = TbsAnalyser().analysisByPath(path)
+
+        assertEquals(results.size, 4)
+    }
 }
