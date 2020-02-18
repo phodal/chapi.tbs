@@ -7,8 +7,7 @@ plugins {
 
 allprojects {
     group = "com.phodal.tbs"
-    version = "0.0.3"
-    description = "Chapi is A common language meta information convertor, convert different languages to same meta-data model"
+    version = "0.0.4"
 
     repositories {
         mavenCentral()
@@ -18,9 +17,9 @@ allprojects {
 }
 
 dependencies {
-    implementation("com.phodal:chapi-domain:0.0.3")
-    implementation("com.phodal:chapi-application:0.0.3")
-    implementation("com.phodal:chapi-ast-java:0.0.3")
+    implementation("com.phodal:chapi-domain:0.0.4")
+    implementation("com.phodal:chapi-application:0.0.4")
+    implementation("com.phodal:chapi-ast-java:0.0.4")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))

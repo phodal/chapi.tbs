@@ -1,39 +1,35 @@
 package org.archguard.ttbs
 
-import chapi.app.analyser.AbstractFile
+import chapi.app.analyser.config.ChapiConfig
+import chapi.app.analyser.support.AbstractFile
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.nio.file.Paths
 
 internal class TbsAnalyserTest {
     @Test
     internal fun shouldIdentifyJavaEmptyTest() {
-        val files = getTestResourceFileByPath("tbs/usecases/EmptyTest.java")
-        val results = TbsAnalyser().analysisByFiles(files)
+        val path = getAbsolutePath("tbs/usecases/EmptyTest.java")
+        val results = TbsAnalyser().analysisByPath(path)
 
         assertEquals(results[0].FileName, "EmptyTest.java")
         assertEquals(results[0].Line, 8)
         assertEquals(results[0].Type, "EmptyTest")
     }
-
+//
 //    @Test
 //    internal fun shouldIdentifyGolangEmptyTest() {
-//        val files = getTestResourceFileByPath("tbs/go/empty_test.go")
-//        val results = TbsAnalyser().analysisByFiles(files)
+//        val path = getAbsolutePath("tbs/go/empty_test.go")
+//        val results = TbsAnalyser(ChapiConfig(language = "go")).analysisByPath(path)
 //
 //        assertEquals(results[0].FileName, "empty_test.go")
 //        assertEquals(results[0].Line, 8)
 //        assertEquals(results[0].Type, "EmptyTest")
 //    }
-//
-    private fun getTestResourceFileByPath(path: String): Array<AbstractFile> {
+
+    private fun getAbsolutePath(path: String): String {
         val resource = this.javaClass.classLoader.getResource(path)
-        val file = Paths.get(resource!!.toURI()).toFile()
-
-        var files = arrayOf<AbstractFile>()
-        val toAbstractFile = AbstractFile.toAbstractFile(file)
-        files += toAbstractFile
-
-        return files
+        return Paths.get(resource!!.toURI()).toFile().absolutePath
     }
 }

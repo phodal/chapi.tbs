@@ -1,7 +1,8 @@
 package org.archguard.ttbs
 
-import chapi.app.analyser.AbstractFile
 import chapi.app.analyser.ChapiAnalyser
+import chapi.app.analyser.config.ChapiConfig
+import chapi.app.analyser.support.AbstractFile
 import chapi.domain.core.CodeAnnotation
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeFunction
@@ -13,14 +14,14 @@ data class TestBadSmell(
     var Line: Int = 0
 ) {}
 
-data class TbsResults(
-    var results: Array<TestBadSmell>
-) {}
+data class TbsResults(var results: Array<TestBadSmell>) {}
 
-class TbsAnalyser {
-    fun analysisByFiles(files: Array<AbstractFile>): Array<TestBadSmell> {
-        val nodes = ChapiAnalyser().analysisByFiles(files)
-        var results : TbsResults = TbsResults(arrayOf())
+class TbsAnalyser(
+    private val config: ChapiConfig = ChapiConfig()
+) {
+    fun analysisByPath(path: String): Array<TestBadSmell> {
+        val nodes = ChapiAnalyser(config).analysis(path)
+        var results: TbsResults = TbsResults(arrayOf())
         val callMethodMap = buildCallMethodMap(nodes)
 
         for (node in nodes) {
@@ -61,7 +62,7 @@ class TbsAnalyser {
     }
 
     private fun buildCallMethodMap(nodes: Array<CodeDataStruct>): MutableMap<String, CodeFunction> {
-        var callMethodMap : MutableMap<String, CodeFunction> = mutableMapOf()
+        var callMethodMap: MutableMap<String, CodeFunction> = mutableMapOf()
         for (node in nodes) {
             for (method in node.Functions) {
                 callMethodMap[method.buildFullMethodName(node)] = method
