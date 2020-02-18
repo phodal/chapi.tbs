@@ -17,9 +17,9 @@ allprojects {
 }
 
 dependencies {
-    implementation("com.phodal:chapi-domain:0.0.5")
-    implementation("com.phodal:chapi-application:0.0.5")
-    implementation("com.phodal:chapi-ast-java:0.0.5")
+    implementation("com.phodal.chapi:chapi-domain:0.0.5")
+    implementation("com.phodal.chapi:chapi-application:0.0.5")
+    implementation("com.phodal.chapi:chapi-ast-java:0.0.5")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
