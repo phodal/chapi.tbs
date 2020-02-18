@@ -3,6 +3,7 @@ package org.archguard.ttbs
 import chapi.app.analyser.ChapiAnalyser
 import chapi.app.analyser.config.ChapiConfig
 import chapi.domain.core.CodeAnnotation
+import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeFunction
 
@@ -13,14 +14,14 @@ data class TestBadSmell(
     var Line: Int = 0
 ) {}
 
-data class TbsResults(var results: Array<TestBadSmell>) {}
+data class TbsResult(var results: Array<TestBadSmell>) {}
 
 class TbsAnalyser(
     private val config: ChapiConfig = ChapiConfig()
 ) {
     fun analysisByPath(path: String): Array<TestBadSmell> {
         val nodes = ChapiAnalyser(config).analysis(path)
-        var results: TbsResults = TbsResults(arrayOf())
+        var tbsResult: TbsResult = TbsResult(arrayOf())
         val callMethodMap = buildCallMethodMap(nodes)
 
         for (node in nodes) {
@@ -30,19 +31,38 @@ class TbsAnalyser(
                 }
 
                 for (annotation in method.Annotations) {
-                    checkIgnoreTest(node.FilePath, annotation, results, method)
-                    checkEmptyTest(node.FilePath, annotation, results, method)
+                    checkIgnoreTest(node.FilePath, annotation, tbsResult, method)
+                    checkEmptyTest(node.FilePath, annotation, tbsResult, method)
+                }
+
+                val methodCallMap = mutableMapOf<String, Array<CodeCall>>()
+                val hasAssert = false
+                for (funcCall in method.FunctionCalls) {
+                    checkRedundantPrintTest(node.FilePath, funcCall, tbsResult)
                 }
             }
         }
 
-        return results.results
+        return tbsResult.results
+    }
+
+    private fun checkRedundantPrintTest(filePath: String, funcCall: CodeCall, tbsResult: TbsResult) {
+        if (funcCall.isSystemOutput()) {
+            val testBadSmell = TestBadSmell(
+                FileName = filePath,
+                Type = "RedundantPrintTest",
+                Description = "",
+                Line = funcCall.Position.StartLine
+            )
+
+            tbsResult.results += testBadSmell
+        }
     }
 
     private fun checkIgnoreTest(
         filePath: String,
         annotation: CodeAnnotation,
-        results: TbsResults,
+        tbsResult: TbsResult,
         method: CodeFunction
     ) {
         if (annotation.isIgnore()) {
@@ -50,17 +70,17 @@ class TbsAnalyser(
                 FileName = filePath,
                 Type = "IgnoreTest",
                 Description = "",
-                Line = 0
+                Line = method.Position.StartLine
             )
 
-            results.results += testBadSmell
+            tbsResult.results += testBadSmell
         }
     }
 
     private fun checkEmptyTest(
         filePath: String,
         annotation: CodeAnnotation,
-        results: TbsResults,
+        tbsResult: TbsResult,
         method: CodeFunction
     ) {
         val isJavaTest = filePath.endsWith(".java") && annotation.isTest()
@@ -74,7 +94,7 @@ class TbsAnalyser(
                     Line = method.Position.StartLine
                 )
 
-                results.results += badSmell
+                tbsResult.results += badSmell
             }
         }
     }
