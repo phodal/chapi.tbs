@@ -30,12 +30,31 @@ class TbsAnalyser(
                 }
 
                 for (annotation in method.Annotations) {
+                    checkIgnoreTest(node.FilePath, annotation, results, method)
                     checkEmptyTest(node.FilePath, annotation, results, method)
                 }
             }
         }
 
         return results.results
+    }
+
+    private fun checkIgnoreTest(
+        filePath: String,
+        annotation: CodeAnnotation,
+        results: TbsResults,
+        method: CodeFunction
+    ) {
+        if (annotation.isIgnore()) {
+            val testBadSmell = TestBadSmell(
+                FileName = filePath,
+                Type = "IgnoreTest",
+                Description = "",
+                Line = 0
+            )
+
+            results.results += testBadSmell
+        }
     }
 
     private fun checkEmptyTest(

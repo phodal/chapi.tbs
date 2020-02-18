@@ -14,16 +14,15 @@ internal class TbsAnalyserTest {
         assertEquals(results[0].Line, 8)
         assertEquals(results[0].Type, "EmptyTest")
     }
-//
-//    @Test
-//    internal fun shouldIdentifyGolangEmptyTest() {
-//        val path = getAbsolutePath("tbs/go/empty_test.go")
-//        val results = TbsAnalyser(ChapiConfig(language = "go")).analysisByPath(path)
-//
-//        assertEquals(results[0].FileName, "empty_test.go")
-//        assertEquals(results[0].Line, 8)
-//        assertEquals(results[0].Type, "EmptyTest")
-//    }
+
+    @Test
+    internal fun shouldIdentifyJavaIgnoreTest() {
+        val path = getAbsolutePath("tbs/usecases/IgnoreTest.java")
+        val results = TbsAnalyser().analysisByPath(path)
+
+        assertEquals(results[0].Line, 0)
+        assertEquals(results[0].Type, "IgnoreTest")
+    }
 
     private fun getAbsolutePath(path: String): String {
         val resource = this.javaClass.classLoader.getResource(path)
