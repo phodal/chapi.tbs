@@ -40,11 +40,33 @@ class TbsAnalyser(
                 for (funcCall in method.FunctionCalls) {
                     checkRedundantPrintTest(node.FilePath, funcCall, tbsResult)
                     checkSleepyTest(node.FilePath, method, funcCall, tbsResult)
+                    checkRedundantAssertionTest(node.FilePath, method, funcCall, tbsResult)
                 }
             }
         }
 
         return tbsResult.results
+    }
+
+    private fun checkRedundantAssertionTest(
+        filePath: String,
+        method: CodeFunction,
+        funcCall: CodeCall,
+        tbsResult: TbsResult
+    ) {
+        val assertParametersSize = 2
+        if (funcCall.Parameters.size == assertParametersSize) {
+            if (funcCall.Parameters[0].TypeValue == funcCall.Parameters[1].TypeValue) {
+                val testBadSmell = TestBadSmell(
+                    FileName = filePath,
+                    Type = "RedundantAssertionTest",
+                    Description = "",
+                    Line = funcCall.Position.StartLine
+                )
+
+                tbsResult.results += testBadSmell
+            }
+        }
     }
 
     private fun checkSleepyTest(filePath: String, method: CodeFunction, funcCall: CodeCall, tbsResult: TbsResult) {

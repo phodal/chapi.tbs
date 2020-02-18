@@ -46,4 +46,13 @@ internal class TbsAnalyserTest {
         assertEquals(results[0].Line, 8)
         assertEquals(results[0].Type, "SleepyTest")
     }
+
+    @Test
+    internal fun shouldIdentifyRedundantAssertionTest() {
+        val path = getAbsolutePath("tbs/usecases/RedundantAssertionTest.java")
+        val results = TbsAnalyser().analysisByPath(path)
+
+        assertEquals(results[0].Line, 14)
+        assertEquals(results[0].Type, "RedundantAssertionTest")
+    }
 }
