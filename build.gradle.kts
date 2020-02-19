@@ -6,7 +6,7 @@ plugins {
 }
 
 application {
-    mainClassName = "org.archguard.tbs.Main"
+    mainClassName = "org.archguard.ttbs.Main"
 }
 
 tasks.withType<Jar> {
