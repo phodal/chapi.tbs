@@ -1,8 +1,20 @@
 plugins {
-    base
-
+    application
     java
     kotlin("jvm") version "1.3.61"
+    kotlin("plugin.serialization") version "1.3.61"
+}
+
+application {
+    mainClassName = "org.archguard.tbs.Main"
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = application.mainClassName
+    }
+
+    from(configurations.runtime.get().map {if (it.isDirectory) it else zipTree(it)})
 }
 
 allprojects {
@@ -17,6 +29,7 @@ allprojects {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
     implementation("com.phodal.chapi:chapi-domain:0.0.5")
     implementation("com.phodal.chapi:chapi-application:0.0.5")
     implementation("com.phodal.chapi:chapi-ast-java:0.0.5")
