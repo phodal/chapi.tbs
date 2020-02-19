@@ -1,4 +1,4 @@
-package org.archguard.ttbs
+package org.archguard.tbs
 
 import chapi.app.analyser.ChapiAnalyser
 import chapi.app.analyser.config.ChapiConfig
@@ -6,13 +6,21 @@ import chapi.domain.core.CodeAnnotation
 import chapi.domain.core.CodeCall
 import chapi.domain.core.CodeDataStruct
 import chapi.domain.core.CodeFunction
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 
+@Serializable
 data class TestBadSmell(
     var FileName: String = "",
     var Type: String = "",
     var Description: String = "",
     var Line: Int = 0
-) {}
+) {
+    override fun toString(): String {
+        return Json(JsonConfiguration.Stable).stringify(serializer(), this)
+    }
+}
 
 data class TbsResult(var results: Array<TestBadSmell>) {}
 
@@ -32,7 +40,6 @@ class TbsAnalyser(
 
                 var currentMethodCalls = addExtractAssertMethodCall(method, node, callMethodMap)
                 method.FunctionCalls = currentMethodCalls
-                println(method.FunctionCalls.size)
 
                 for (annotation in method.Annotations) {
                     checkIgnoreTest(node.FilePath, annotation, tbsResult, method)
@@ -54,8 +61,8 @@ class TbsAnalyser(
                     updateMethodCallMap(funcCall, methodCallMap)
 
                     checkRedundantPrintTest(node.FilePath, funcCall, tbsResult)
-                    checkSleepyTest(node.FilePath, method, funcCall, tbsResult)
-                    checkRedundantAssertionTest(node.FilePath, method, funcCall, tbsResult)
+                    checkSleepyTest(node.FilePath, funcCall, tbsResult)
+                    checkRedundantAssertionTest(node.FilePath, funcCall, tbsResult)
 
                     if (funcCall.hasAssertion()) hasAssert = true
 
@@ -145,7 +152,6 @@ class TbsAnalyser(
 
     private fun checkRedundantAssertionTest(
         filePath: String,
-        method: CodeFunction,
         funcCall: CodeCall,
         tbsResult: TbsResult
     ) {
@@ -164,7 +170,7 @@ class TbsAnalyser(
         }
     }
 
-    private fun checkSleepyTest(filePath: String, method: CodeFunction, funcCall: CodeCall, tbsResult: TbsResult) {
+    private fun checkSleepyTest(filePath: String, funcCall: CodeCall, tbsResult: TbsResult) {
         if (funcCall.isThreadSleep()) {
             val testBadSmell = TestBadSmell(
                 FileName = filePath,
