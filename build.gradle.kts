@@ -18,7 +18,7 @@ tasks.withType<Jar> {
 }
 
 allprojects {
-    group = "org.archguard.tbs"
+    group = "com.phodal.chapi.tbs"
     version = "0.0.5"
 
     repositories {
@@ -57,11 +57,3 @@ tasks.test {
     }
 }
 
-//val compileKotlin: KotlinCompile by tasks
-//compileKotlin.kotlinOptions {
-//    jvmTarget = "1.8"
-//}
-//val compileTestKotlin: KotlinCompile by tasks
-//compileTestKotlin.kotlinOptions {
-//    jvmTarget = "1.8"
-//}

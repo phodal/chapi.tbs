@@ -1,1 +1,1 @@
-rootProject.name = "archguard-ttbs"
+rootProject.name = "chapi-tbs"
