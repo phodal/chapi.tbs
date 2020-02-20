@@ -6,7 +6,7 @@ plugins {
 }
 
 application {
-    mainClassName = "org.archguard.ttbs.Main"
+    mainClassName = "com.phodal.chapi.tbs.Main"
 }
 
 tasks.withType<Jar> {

@@ -1,4 +1,4 @@
-package org.archguard.ttbs
+package com.phodal.chapi.tbs
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
