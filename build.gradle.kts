@@ -1,8 +1,8 @@
 plugins {
     application
     java
-    kotlin("jvm") version "1.3.61"
-    kotlin("plugin.serialization") version "1.3.61"
+    kotlin("jvm") version "1.3.70"
+    kotlin("plugin.serialization") version "1.3.70"
 }
 
 application {
@@ -29,7 +29,7 @@ allprojects {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
     implementation("com.phodal.chapi:chapi-domain:0.0.5")
     implementation("com.phodal.chapi:chapi-application:0.0.5")
     implementation("com.phodal.chapi:chapi-ast-java:0.0.5")
