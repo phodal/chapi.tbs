@@ -1,4 +1,4 @@
-package org.archguard.tbs
+package com.phodal.chapi.tbs
 
 import chapi.app.analyser.ChapiAnalyser
 import chapi.app.analyser.config.ChapiConfig

@@ -1,7 +1,6 @@
 @file:JvmName("Main")
 package com.phodal.chapi.tbs
 
-import org.archguard.tbs.TbsAnalyser
 import java.io.File
 
 fun main(vararg args: String) {
